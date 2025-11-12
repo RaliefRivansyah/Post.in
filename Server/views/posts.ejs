@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Posts</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    </head>
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">SocialApp</a>
+                <div class="d-flex gap-2">
+                    <a href="/posts" class="btn btn-outline-light btn-sm active">Posts</a>
+                    <a href="/communities" class="btn btn-outline-light btn-sm">Communities</a>
+                    <a href="/profile" class="btn btn-outline-light btn-sm">Profile</a>
+                    <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <!-- Left Sidebar: Communities -->
+                <div class="col-md-3">
+                    <div class="card mb-3 sticky-top" style="top: 20px">
+                        <div class="card-header bg-primary text-white">
+                            <strong>My Communities</strong>
+                        </div>
+                        <div class="card-body">
+                            <% if (myCommunities && myCommunities.length > 0) { %>
+                            <div class="list-group list-group-flush">
+                                <% myCommunities.forEach(community => { %>
+                                <a href="/communities/<%= community.id %>" class="list-group-item list-group-item-action border-0 px-0">
+                                    <div class="d-flex align-items-center">
+                                        <% if (community.iconUrl) { %>
+                                        <img
+                                            src="<%= community.iconUrl %>"
+                                            alt="<%= community.name %>"
+                                            class="rounded-circle me-2"
+                                            width="24"
+                                            height="24" />
+                                        <% } else { %>
+                                        <div
+                                            class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2"
+                                            style="width: 24px; height: 24px; font-size: 0.7rem">
+                                            <%= community.name.charAt(0).toUpperCase() %>
+                                        </div>
+                                        <% } %>
+                                        <small>p/<%= community.name %></small>
+                                    </div>
+                                </a>
+                                <% }) %>
+                            </div>
+                            <% } else { %>
+                            <p class="text-muted small mb-2">You haven't joined any communities yet.</p>
+                            <% } %>
+                            <hr />
+                            <a href="/communities" class="btn btn-sm btn-outline-primary w-100">Explore Communities</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center: Main Content -->
+                <div class="col-md-6">
+                    <h2 class="mb-3">Create Post</h2>
+                    <form method="POST" action="/posts">
+                        <div class="mb-3">
+                            <label>Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Enter a title for your post..." required />
+                        </div>
+                        <div class="mb-3">
+                            <label>Content</label>
+                            <textarea name="content" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>Image URL (optional)</label>
+                            <input type="text" name="imageUrl" class="form-control" placeholder="https://..." />
+                        </div>
+                        <% if (myCommunities && myCommunities.length > 0) { %>
+                        <div class="mb-3">
+                            <label>Post to Community (optional)</label>
+                            <select name="communityId" class="form-select">
+                                <option value="">Your Profile</option>
+                                <% myCommunities.forEach(community => { %>
+                                <option value="<%= community.id %>">r/<%= community.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <% } %>
+                        <button type="submit" class="btn btn-primary">Post</button>
+                    </form>
+
+                    <hr class="my-4" />
+                    <h3>Feed</h3>
+
+                    <% posts.forEach(post => { %>
+                    <div class="card mb-3 shadow-sm">
+                        <% if (post.imageUrl) { %>
+                        <img
+                            src="<%= post.imageUrl %>"
+                            class="card-img-top"
+                            alt="post-image"
+                            style="max-height: 500px; object-fit: cover" />
+                        <% } %>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <% if (post.User.Profile && post.User.Profile.avatarUrl) { %>
+                                <img
+                                    src="<%= post.User.Profile.avatarUrl %>"
+                                    alt="<%= post.User.username %>"
+                                    class="rounded-circle me-2"
+                                    style="width: 32px; height: 32px; object-fit: cover" />
+                                <% } else { %>
+                                <div
+                                    class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center me-2"
+                                    style="width: 32px; height: 32px">
+                                    <span class="text-white" style="font-size: 0.8rem"
+                                        ><%= post.User.username.charAt(0).toUpperCase() %></span
+                                    >
+                                </div>
+                                <% } %>
+                                <div>
+                                    <% if (post.Community) { %>
+                                    <small class="text-muted">
+                                        <a href="/communities/<%= post.Community.id %>" class="text-decoration-none"
+                                            ><strong>r/<%= post.Community.name %></strong></a
+                                        >
+                                        • Posted by <%= post.User.username %>
+                                    </small>
+                                    <% } else { %>
+                                    <small class="text-muted">Posted by <strong><%= post.User.username %></strong></small>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <h4 class="mb-2">
+                                <a href="/posts/<%= post.id %>" class="text-decoration-none text-dark"> <%= post.title %> </a>
+                            </h4>
+
+                            <p class="card-text">
+                                <% if (post.title) { %> <%= post.content.length > 150 ? post.content.substring(0, 150) + '...' :
+                                post.content %> <% if (post.content.length > 150) { %>
+                                <a href="/posts/<%= post.id %>" class="text-primary">Read more</a>
+                                <% } %> <% } else { %> <%= post.content %> <% } %>
+                            </p>
+
+                            <div class="d-flex gap-2 mb-3">
+                                <form method="POST" action="/posts/<%= post.id %>/like" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        ❤️ Like (<%= post.Likes ? post.Likes.length : 0 %>)
+                                    </button>
+                                </form>
+                                <span class="text-muted small align-self-center">
+                                    <% if (post.Likes && post.Likes.length > 0) { %> Liked by <%= post.Likes.length %> <%= post.Likes.length
+                                    === 1 ? 'user' : 'users' %> <% } %>
+                                </span>
+                            </div>
+
+                            <div class="mt-3">
+                                <% if (!post.title) { %>
+                                <!-- Show full comment form and list if no title -->
+                                <form method="POST" action="/posts/<%= post.id %>/comment">
+                                    <div class="input-group">
+                                        <input type="text" name="content" placeholder="Add comment..." class="form-control" required />
+                                        <button type="submit" class="btn btn-outline-primary">Comment</button>
+                                    </div>
+                                </form>
+
+                                <% if (post.Comments && post.Comments.length > 0) { %>
+                                <div class="mt-3">
+                                    <h6 class="text-muted">Comments (<%= post.Comments.length %>):</h6>
+                                    <% post.Comments.forEach(c => { %>
+                                    <div class="mt-2 ps-3 border-start border-2 d-flex">
+                                        <% if (c.User.Profile && c.User.Profile.avatarUrl) { %>
+                                        <img
+                                            src="<%= c.User.Profile.avatarUrl %>"
+                                            alt="<%= c.User.username %>"
+                                            class="rounded-circle me-2"
+                                            style="width: 30px; height: 30px; object-fit: cover" />
+                                        <% } else { %>
+                                        <div
+                                            class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center me-2 flex-shrink-0"
+                                            style="width: 30px; height: 30px">
+                                            <small class="text-white"><%= c.User.username.charAt(0).toUpperCase() %></small>
+                                        </div>
+                                        <% } %>
+                                        <div><strong><%= c.User.username %></strong>: <%= c.content %></div>
+                                    </div>
+                                    <% }) %>
+                                </div>
+                                <% } %> <% } else { %>
+                                <!-- Show comment count and link if has title -->
+                                <div class="text-muted">
+                                    💬 <%= post.Comments ? post.Comments.length : 0 %> <%= (post.Comments ? post.Comments.length : 0) === 1
+                                    ? 'comment' : 'comments' %> <% if (post.Comments && post.Comments.length > 0) { %> •
+                                    <a href="/posts/<%= post.id %>" class="text-decoration-none">View all comments</a> <% } else { %> •
+                                    <a href="/posts/<%= post.id %>" class="text-decoration-none">Be the first to comment</a>
+                                    <% } %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+
+                <!-- Right Sidebar: Following Users (Placeholder) -->
+                <div class="col-md-3">
+                    <div class="card sticky-top" style="top: 20px">
+                        <div class="card-header bg-info text-white">
+                            <strong>Following</strong>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Follow users feature coming soon!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
