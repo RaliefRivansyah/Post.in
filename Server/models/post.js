@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
             },
             content: DataTypes.TEXT,
             imageUrl: DataTypes.STRING,
+            videoUrl: DataTypes.STRING,
+            mediaType: {
+                type: DataTypes.ENUM('image', 'video'),
+                allowNull: true,
+                defaultValue: 'image',
+            },
             communityId: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

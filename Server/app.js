@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const cors = require('cors');
+const passport = require('./config/passport');
 const authentication = require('./middlewares/authentication');
 const authorization = require('./middlewares/authorization');
 const authController = require('./controllers/authController');
@@ -10,9 +12,20 @@ const postController = require('./controllers/postController');
 const commentController = require('./controllers/commentController');
 const likeController = require('./controllers/likeController');
 const communityController = require('./controllers/communityController');
-const { Post, Comment, User } = require('./models');
+const uploadController = require('./controllers/uploadController');
+const { uploadImage, uploadVideo, uploadAvatar } = require('./config/cloudinary');
+const { Post, Comment, User, Community, CommunityMember } = require('./models');
 
 const app = express();
+
+// CORS configuration
+app.use(
+    cors({
+        origin: ['http://localhost:5173', 'http://localhost:5174'],
+        credentials: true,
+    })
+);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
@@ -24,6 +37,10 @@ app.use(
     })
 );
 
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // ======== VIEW ROUTES ========
 
 // Landing page
@@ -31,30 +48,55 @@ app.get('/', (req, res) => {
     res.render('index', { token: req.session.token });
 });
 
-// Register
+// Register (view only)
 app.get('/register', (req, res) => res.render('register'));
-app.post('/register', authController.register);
 
-// Login
+// Login (view only)
 app.get('/login', (req, res) => res.render('login'));
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const jwt = require('jsonwebtoken');
-    const { User } = require('./models');
-    const user = await User.findOne({ where: { email } });
-    if (!user || !(await user.validPassword(password))) return res.send('Invalid credentials');
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    req.session.token = token;
-    res.redirect('/posts');
-});
 
 // Logout
 app.get('/logout', (req, res) => {
     req.session.destroy(() => res.redirect('/'));
 });
 
+// ======== API ROUTES (JSON) ========
+// Auth routes (public)
+app.post('/api/register', authController.register);
+app.post('/api/login', authController.login);
+app.post('/api/auth/google', authController.googleLogin);
+
+// Protected API routes
+app.get('/api/posts', authentication, postController.getAllPosts);
+app.post('/api/posts', authentication, postController.createPost);
+app.get('/api/posts/:id', authentication, postController.getPostById);
+app.delete('/api/posts/:id', authentication, authorization.postOwnerOrAdmin, postController.deletePost);
+app.post('/api/posts/:postId/like', authentication, likeController.toggleLike);
+app.post('/api/posts/:postId/comment', authentication, commentController.createComment);
+app.delete('/api/posts/:postId/comment/:id', authentication, authorization.commentOwnerOrAdmin, commentController.deleteComment);
+
+app.get('/api/communities', authentication, communityController.getAllCommunities);
+app.post('/api/communities', authentication, communityController.createCommunity);
+app.get('/api/communities/:id', authentication, communityController.getCommunityById);
+app.post('/api/communities/:id/join', authentication, communityController.joinCommunity);
+app.post('/api/communities/:id/leave', authentication, communityController.leaveCommunity);
+
+app.get('/api/profile', authentication, profileController.getProfile);
+app.post('/api/profile/edit', authentication, profileController.updateProfile);
+
+// Upload routes
+app.post('/api/upload/image', authentication, uploadImage.single('image'), uploadController.uploadImage);
+app.post('/api/upload/video', authentication, uploadVideo.single('video'), uploadController.uploadVideo);
+app.post('/api/upload/avatar', authentication, uploadAvatar.single('avatar'), uploadController.uploadAvatar);
+app.delete('/api/upload/media', authentication, uploadController.deleteMedia);
+
 // ======== PROTECTED VIEW ========
-app.use(async (req, res, next) => {
+// Middleware for EJS views only (after API routes)
+app.use((req, res, next) => {
+    // Skip this middleware for API routes
+    if (req.path.startsWith('/api')) {
+        return next();
+    }
+
     const jwt = require('jsonwebtoken');
     if (!req.session.token) return res.redirect('/login');
     try {

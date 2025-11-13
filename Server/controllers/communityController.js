@@ -40,11 +40,24 @@ module.exports = {
                 order: [['createdAt', 'DESC']],
             });
 
+            // Get user's joined communities
+            const myCommunitiesIds = await CommunityMember.findAll({
+                where: { userId: req.user.id },
+                attributes: ['communityId'],
+            });
+
+            const myCommunityIdsSet = new Set(myCommunitiesIds.map((m) => m.communityId));
+            const myCommunities = communities.filter((c) => myCommunityIdsSet.has(c.id));
+
             if (req.headers.accept && req.headers.accept.includes('text/html')) {
                 return res.render('communities', { communities, user: { id: req.user.id } });
             }
 
-            res.json(communities);
+            // Return both all communities and user's joined communities
+            res.json({
+                communities,
+                myCommunities,
+            });
         } catch (err) {
             res.status(500).json({ message: 'Error fetching communities', error: err.message });
         }

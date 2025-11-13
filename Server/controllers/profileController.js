@@ -3,11 +3,21 @@ const { Profile, User, Post, Like, Comment } = require('../models');
 module.exports = {
     async getProfile(req, res) {
         try {
+            const { Community } = require('../models');
             const user = await User.findByPk(req.user.id, {
-                attributes: ['id', 'username', 'email'],
+                attributes: ['id', 'username', 'email', 'role', 'createdAt'],
+                include: [
+                    { model: Profile, attributes: ['bio', 'location', 'avatarUrl', 'website'] },
+                    { model: Post, attributes: ['id'] },
+                    { model: Comment, attributes: ['id'] },
+                    {
+                        model: Community,
+                        as: 'JoinedCommunities',
+                        attributes: ['id', 'name'],
+                        through: { attributes: [] },
+                    },
+                ],
             });
-
-            let profile = await Profile.findOne({ where: { userId: req.user.id } });
 
             // Get user's posts with likes and comments count
             const posts = await Post.findAll({
@@ -24,15 +34,21 @@ module.exports = {
             if (req.headers.accept && req.headers.accept.includes('text/html')) {
                 return res.render('profile', {
                     user,
-                    profile,
+                    profile: user.Profile,
                     posts,
                     editMode: false,
                 });
             }
 
-            if (!profile) return res.status(404).json({ message: 'Profile not found' });
-            res.json(profile);
+            // Ensure role is included from req.user if not in database
+            const userData = user.toJSON();
+            if (!userData.role && req.user.role) {
+                userData.role = req.user.role;
+            }
+
+            res.json(userData);
         } catch (err) {
+            console.error('Profile error:', err);
             res.status(500).json({ message: 'Error retrieving profile', error: err.message });
         }
     },

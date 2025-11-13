@@ -19,40 +19,24 @@ module.exports = {
 
     async getAllPosts(req, res) {
         try {
-            // Get user's joined communities
-            const myCommunities = await CommunityMember.findAll({
-                where: { userId: req.user.id },
-                attributes: ['communityId'],
-            });
-
-            const communityIds = myCommunities.map((m) => m.communityId);
-
-            // Smart feed logic
-            let whereClause = {};
-            if (communityIds.length > 0) {
-                // Show posts from joined communities
-                whereClause.communityId = communityIds;
-            }
-            // If no communities joined, show all posts (default feed)
-
+            // Always return ALL posts, let frontend do the filtering
             const posts = await Post.findAll({
-                where: whereClause,
                 include: [
                     {
                         model: User,
-                        attributes: ['username'],
+                        attributes: ['id', 'username'],
                         include: [{ model: Profile, attributes: ['avatarUrl'] }],
                     },
                     {
                         model: Community,
-                        attributes: ['name', 'iconUrl'],
+                        attributes: ['id', 'name', 'iconUrl'],
                     },
                     {
                         model: Comment,
                         include: [
                             {
                                 model: User,
-                                attributes: ['username'],
+                                attributes: ['id', 'username'],
                                 include: [{ model: Profile, attributes: ['avatarUrl'] }],
                             },
                         ],
@@ -80,7 +64,7 @@ module.exports = {
                 return res.render('posts', { posts, myCommunities: myCommunitiesFull });
             }
 
-            res.json(posts);
+            res.json({ posts, myCommunities: myCommunitiesFull });
         } catch (err) {
             res.status(500).json({ message: 'Error fetching posts', error: err.message });
         }
@@ -92,15 +76,19 @@ module.exports = {
                 include: [
                     {
                         model: User,
-                        attributes: ['username'],
+                        attributes: ['id', 'username'],
                         include: [{ model: Profile, attributes: ['avatarUrl'] }],
+                    },
+                    {
+                        model: Community,
+                        attributes: ['id', 'name', 'iconUrl'],
                     },
                     {
                         model: Comment,
                         include: [
                             {
                                 model: User,
-                                attributes: ['username'],
+                                attributes: ['id', 'username'],
                                 include: [{ model: Profile, attributes: ['avatarUrl'] }],
                             },
                         ],
