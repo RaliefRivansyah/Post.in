@@ -56,15 +56,15 @@ export default function Navbar() {
                             Communities
                         </Link>
                         <NotificationBell />
-                        
+
                         {/* Profile Dropdown */}
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={toggleDropdown}
                                 className="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-[#5F5F5F] transition">
-                                {profile?.avatarUrl ? (
+                                {profile?.Profile?.avatarUrl ? (
                                     <img
-                                        src={profile.avatarUrl}
+                                        src={profile.Profile.avatarUrl}
                                         alt={profile.username}
                                         className="w-8 h-8 rounded-full object-cover"
                                     />
