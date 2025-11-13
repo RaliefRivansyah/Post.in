@@ -152,18 +152,18 @@ export default function MediaUploader({ onUploadComplete, mediaType = 'image' })
                 }
 
                 .upload-area {
-                    border: 2px dashed #cbd5e0;
+                    border: 2px dashed #E0E0E0;
                     border-radius: 8px;
                     padding: 2rem;
                     text-align: center;
                     cursor: pointer;
                     transition: all 0.3s;
-                    background: #f7fafc;
+                    background: #F5F5F5;
                 }
 
                 .upload-area:hover {
-                    border-color: #4299e1;
-                    background: #ebf8ff;
+                    border-color: #6C63FF;
+                    background: #F5F5F5;
                 }
 
                 .preview-container {
@@ -184,7 +184,7 @@ export default function MediaUploader({ onUploadComplete, mediaType = 'image' })
                     bottom: 0;
                     left: 0;
                     right: 0;
-                    background: rgba(0, 0, 0, 0.7);
+                    background: rgba(26, 26, 26, 0.8);
                     padding: 0.5rem;
                     border-bottom-left-radius: 8px;
                     border-bottom-right-radius: 8px;
@@ -192,7 +192,7 @@ export default function MediaUploader({ onUploadComplete, mediaType = 'image' })
 
                 .progress-bar {
                     height: 4px;
-                    background: #4299e1;
+                    background: #6C63FF;
                     transition: width 0.3s;
                     border-radius: 2px;
                 }
@@ -214,19 +214,19 @@ export default function MediaUploader({ onUploadComplete, mediaType = 'image' })
                 .upload-icon {
                     width: 48px;
                     height: 48px;
-                    color: #718096;
+                    color: #5F5F5F;
                 }
 
                 .upload-text {
                     font-size: 1rem;
-                    color: #2d3748;
+                    color: #1A1A1A;
                     font-weight: 500;
                     margin: 0;
                 }
 
                 .upload-hint {
                     font-size: 0.875rem;
-                    color: #718096;
+                    color: #5F5F5F;
                     margin: 0;
                 }
 

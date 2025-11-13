@@ -76,20 +76,20 @@ export default function CreatePost() {
     };
 
     return (
-        <div className="py-6">
+        <div className="py-6 bg-[#F5F5F5] min-h-screen">
             <div className="container mx-auto px-4 max-w-2xl">
-                <div className="bg-white rounded-lg shadow-md p-6">
-                    <h2 className="text-2xl font-bold mb-6">Create a Post</h2>
+                <div className="bg-white rounded-lg shadow-md p-6 border border-[#E0E0E0]">
+                    <h2 className="text-2xl font-bold mb-6 text-[#1A1A1A]">Create a Post</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {communities.length > 0 && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Post to Community (optional)</label>
+                                <label className="block text-sm font-medium text-[#1A1A1A] mb-2">Post to Community (optional)</label>
                                 <select
                                     name="communityId"
                                     value={formData.communityId}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    className="w-full px-3 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C63FF]">
                                     <option value="">Your Profile (no community)</option>
                                     {communities.map((community) => (
                                         <option key={community.id} value={community.id}>
@@ -101,40 +101,42 @@ export default function CreatePost() {
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                            <label className="block text-sm font-medium text-[#1A1A1A] mb-2">Title *</label>
                             <input
                                 type="text"
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C63FF]"
                                 placeholder="Enter a title for your post..."
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Content *</label>
+                            <label className="block text-sm font-medium text-[#1A1A1A] mb-2">Content *</label>
                             <textarea
                                 name="content"
                                 value={formData.content}
                                 onChange={handleChange}
                                 required
                                 rows="6"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C63FF]"
                                 placeholder="What's on your mind?"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Add Media (optional)</label>
+                            <label className="block text-sm font-medium text-[#1A1A1A] mb-2">Add Media (optional)</label>
 
                             <div className="flex gap-2 mb-4">
                                 <button
                                     type="button"
                                     onClick={() => handleMediaTypeChange('image')}
                                     className={`px-4 py-2 rounded-lg ${
-                                        mediaType === 'image' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        mediaType === 'image'
+                                            ? 'bg-[#6C63FF] text-white'
+                                            : 'bg-[#E0E0E0] text-[#1A1A1A] hover:bg-[#5F5F5F] hover:text-white'
                                     }`}>
                                     📷 Image
                                 </button>
@@ -142,7 +144,9 @@ export default function CreatePost() {
                                     type="button"
                                     onClick={() => handleMediaTypeChange('video')}
                                     className={`px-4 py-2 rounded-lg ${
-                                        mediaType === 'video' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        mediaType === 'video'
+                                            ? 'bg-[#6C63FF] text-white'
+                                            : 'bg-[#E0E0E0] text-[#1A1A1A] hover:bg-[#5F5F5F] hover:text-white'
                                     }`}>
                                     🎥 Video
                                 </button>
@@ -151,7 +155,7 @@ export default function CreatePost() {
                             <MediaUploader mediaType={mediaType} onUploadComplete={handleMediaUploadComplete} />
 
                             {uploadedMedia && (
-                                <div className="mt-2 text-sm text-green-600">
+                                <div className="mt-2 text-sm text-[#6C63FF]">
                                     ✓ {mediaType === 'image' ? 'Image' : 'Video'} uploaded successfully!
                                 </div>
                             )}
@@ -161,13 +165,13 @@ export default function CreatePost() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                className="flex-1 py-2 px-4 bg-[#6C63FF] text-white rounded-lg hover:bg-[#4C46EF] disabled:opacity-50 disabled:cursor-not-allowed">
                                 {loading ? 'Posting...' : 'Post'}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => navigate('/posts')}
-                                className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+                                className="px-6 py-2 border border-[#E0E0E0] rounded-lg hover:bg-[#F5F5F5]">
                                 Cancel
                             </button>
                         </div>

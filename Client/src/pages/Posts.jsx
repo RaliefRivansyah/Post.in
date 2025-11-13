@@ -80,17 +80,17 @@ export default function Posts() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6C63FF] mx-auto"></div>
+                    <p className="mt-4 text-[#5F5F5F]">Loading...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="py-6">
+        <div className="py-6 bg-[#F5F5F5] min-h-screen">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Left Sidebar - Communities */}
@@ -101,46 +101,34 @@ export default function Posts() {
                     {/* Main Content - Posts Feed */}
                     <div className="lg:col-span-6">
                         {/* Feed Type Tabs */}
-                        <div className="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
-                            <div className="flex border-b">
+                        <div className="bg-white rounded-lg shadow-md mb-6 overflow-hidden border border-[#E0E0E0]">
+                            <div className="flex border-b border-[#E0E0E0]">
                                 <button
                                     onClick={() => setFeedType('all')}
                                     className={`flex-1 py-3 px-4 text-sm font-semibold transition flex items-center justify-center gap-2 ${
-                                        feedType === 'all' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
+                                        feedType === 'all'
+                                            ? 'border-b-2 border-[#6C63FF] text-[#6C63FF]'
+                                            : 'text-[#5F5F5F] hover:bg-[#F5F5F5]'
                                     }`}>
                                     <span> All Posts</span>
-                                    <span
-                                        className={`text-xs px-2 py-0.5 rounded-full ${
-                                            feedType === 'all' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
-                                        }`}>
-                                        {allPosts.length}
-                                    </span>
                                 </button>
                                 <button
                                     onClick={() => setFeedType('following')}
                                     className={`flex-1 py-3 px-4 text-sm font-semibold transition flex items-center justify-center gap-2 ${
                                         feedType === 'following'
-                                            ? 'border-b-2 border-blue-600 text-blue-600'
-                                            : 'text-gray-600 hover:bg-gray-50'
+                                            ? 'border-b-2 border-[#6C63FF] text-[#6C63FF]'
+                                            : 'text-[#5F5F5F] hover:bg-[#F5F5F5]'
                                     }`}>
                                     <span> Following</span>
-                                    <span
-                                        className={`text-xs px-2 py-0.5 rounded-full ${
-                                            feedType === 'following' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
-                                        }`}>
-                                        {communities.length > 0
-                                            ? allPosts.filter((p) => communities.map((c) => c.id).includes(p.communityId)).length
-                                            : 0}
-                                    </span>
                                 </button>
                             </div>
                         </div>
 
                         {/* Create Post Card */}
-                        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+                        <div className="bg-white rounded-lg shadow-md p-4 mb-6 border border-[#E0E0E0]">
                             <Link
                                 to="/posts/new"
-                                className="block w-full text-left px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600">
+                                className="block w-full text-left px-4 py-3 bg-[#F5F5F5] hover:bg-[#E0E0E0] rounded-lg text-[#5F5F5F]">
                                 Create a post...
                             </Link>
                         </div>
@@ -148,20 +136,22 @@ export default function Posts() {
                         {/* Posts List */}
                         <div className="space-y-4">
                             {posts.length === 0 ? (
-                                <div className="bg-white rounded-lg shadow-md p-8 text-center">
+                                <div className="bg-white rounded-lg shadow-md p-8 text-center border border-[#E0E0E0]">
                                     {feedType === 'following' ? (
                                         <>
-                                            <p className="text-gray-500 mb-2">No posts from your followed communities yet.</p>
-                                            <p className="text-gray-400 text-sm mb-4">Join some communities to see their posts here!</p>
+                                            <p className="text-[#5F5F5F] mb-2">No posts from your followed communities yet.</p>
+                                            <p className="text-[#5F5F5F] text-sm mb-4 opacity-70">
+                                                Join some communities to see their posts here!
+                                            </p>
                                             <Link
                                                 to="/communities"
-                                                className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                                className="inline-block px-6 py-2 bg-[#6C63FF] text-white rounded-lg hover:bg-[#4C46EF]">
                                                 Browse Communities
                                             </Link>
                                         </>
                                     ) : (
                                         <>
-                                            <p className="text-gray-500">No posts yet. Be the first to post!</p>
+                                            <p className="text-[#5F5F5F]">No posts yet. Be the first to post!</p>
                                             <Link
                                                 to="/posts/new"
                                                 className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">

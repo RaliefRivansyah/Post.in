@@ -1,1 +1,24 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+    /* Custom Color Palette */
+    --color-primary: #6c63ff;
+    --color-primary-dark: #4c46ef;
+    --color-secondary: #1a1a1a;
+    --color-accent: #5f5f5f;
+    --color-neutral: #e0e0e0;
+    --color-light: #ffffff;
+
+    /* Background Colors */
+    --color-bg-primary: var(--color-light);
+    --color-bg-secondary: #f5f5f5;
+    --color-bg-accent: var(--color-secondary);
+
+    /* Text Colors */
+    --color-text-primary: var(--color-secondary);
+    --color-text-secondary: var(--color-accent);
+    --color-text-light: var(--color-light);
+
+    /* Border Colors */
+    --color-border: var(--color-neutral);
+}
