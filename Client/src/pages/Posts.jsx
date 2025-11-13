@@ -176,12 +176,12 @@ export default function Posts() {
                     </div>
 
                     {/* Right Sidebar - Following (Placeholder) */}
-                    <div className="lg:col-span-3">
+                    {/* <div className="lg:col-span-3">
                         <div className="bg-white rounded-lg shadow-md p-4 sticky top-6">
                             <h3 className="font-bold text-lg mb-4">Following</h3>
                             <p className="text-sm text-gray-500">Follow users feature coming soon!</p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
