@@ -135,7 +135,7 @@ export default function PostDetail() {
                                         <Link
                                             to={`/communities/${post.Community.id}`}
                                             className="text-sm font-bold text-gray-900 hover:underline">
-                                            r/{post.Community.name}
+                                            c/{post.Community.name}
                                         </Link>
                                     )}
                                     <p className="text-sm text-gray-600">

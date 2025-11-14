@@ -4,10 +4,20 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
+        "test:watch": "cross-env NODE_ENV=test jest --watch",
+        "test:coverage": "cross-env NODE_ENV=test jest --coverage",
+        "test:migrate": "cross-env NODE_ENV=test npx sequelize-cli db:migrate",
+        "test:setup": "cross-env NODE_ENV=test npx sequelize-cli db:drop && cross-env NODE_ENV=test npx sequelize-cli db:create && npm run test:migrate",
         "start": "node app.js",
         "migrate": "npx sequelize-cli db:migrate",
         "seed": "npx sequelize-cli db:seed:all"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "coveragePathIgnorePatterns": [
+            "/node_modules/"
+        ]
     },
     "keywords": [],
     "author": "",
@@ -32,7 +42,12 @@
         "sequelize": "^6.37.7"
     },
     "devDependencies": {
+        "@types/jest": "^30.0.0",
+        "@types/supertest": "^6.0.3",
+        "cross-env": "^10.1.0",
+        "jest": "^30.2.0",
         "nodemon": "^3.1.10",
-        "sequelize-cli": "^6.6.3"
+        "sequelize-cli": "^6.6.3",
+        "supertest": "^7.1.4"
     }
 }

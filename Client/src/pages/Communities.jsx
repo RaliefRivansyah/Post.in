@@ -95,7 +95,7 @@ export default function Communities() {
                                         )}
                                         <div>
                                             <Link to={`/communities/${community.id}`} className="text-lg font-bold hover:text-blue-600">
-                                                r/{community.name}
+                                                c/{community.name}
                                             </Link>
                                             <p className="text-sm text-gray-500">{community.Members?.length || 0} members</p>
                                         </div>

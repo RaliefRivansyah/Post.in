@@ -93,7 +93,7 @@ export default function CreatePost() {
                                     <option value="">Your Profile (no community)</option>
                                     {communities.map((community) => (
                                         <option key={community.id} value={community.id}>
-                                            r/{community.name}
+                                            c/{community.name}
                                         </option>
                                     ))}
                                 </select>
