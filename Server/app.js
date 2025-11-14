@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -153,16 +150,6 @@ app.get('/communities/:id', communityController.getCommunityById);
 app.post('/communities/:id/join', communityController.joinCommunity);
 app.post('/communities/:id/leave', communityController.leaveCommunity);
 
-// ======== SERVER ========
-const PORT = process.env.PORT || 3000;
-
-// Only start server if not in test mode
-if (process.env.NODE_ENV !== 'test') {
-    console.log('running...');
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-}
 
 // Export app untuk testing
 module.exports = app;
