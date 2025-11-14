@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -149,7 +150,6 @@ app.post('/communities', communityController.createCommunity);
 app.get('/communities/:id', communityController.getCommunityById);
 app.post('/communities/:id/join', communityController.joinCommunity);
 app.post('/communities/:id/leave', communityController.leaveCommunity);
-
 
 // Export app untuk testing
 module.exports = app;
