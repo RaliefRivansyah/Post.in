@@ -19,7 +19,7 @@ export default function CommunitySidebar({ communities }) {
                                     {community.name.charAt(0).toUpperCase()}
                                 </div>
                             )}
-                            <span className="text-sm text-[#1A1A1A]">r/{community.name}</span>
+                            <span className="text-sm text-[#1A1A1A]">c/{community.name}</span>
                         </Link>
                     ))}
                 </div>

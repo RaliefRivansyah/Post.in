@@ -83,7 +83,7 @@ export default function CommunityDetail() {
                                 </div>
                             )}
                             <div>
-                                <h1 className="text-3xl font-bold">r/{community.name}</h1>
+                                <h1 className="text-3xl font-bold">c/{community.name}</h1>
                                 <p className="text-gray-600 mt-1">{community.description}</p>
                                 <p className="text-sm text-gray-500 mt-2">
                                     Created by {community.Creator?.username} • {community.Members?.length || 0} members
@@ -111,7 +111,7 @@ export default function CommunityDetail() {
                     <Link
                         to={`/posts/new?communityId=${id}`}
                         className="block mb-6 px-6 py-3 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700">
-                        Create Post in r/{community.name}
+                        Create Post in c/{community.name}
                     </Link>
                 )}
 

@@ -1,62 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { communityService } from '../services/api.service';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCommunities, createCommunity, joinCommunity, leaveCommunity } from '../store/slices/communitySlice';
 import { toast } from 'react-toastify';
 import CreateCommunityModal from '../components/CreateCommunityModal';
 
 export default function Communities() {
-    const [communities, setCommunities] = useState([]);
-    const [myCommunityIds, setMyCommunityIds] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const { communities, myCommunities, loading, error } = useSelector((state) => state.community);
     const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => {
-        fetchCommunities();
-    }, []);
+    // Calculate my community IDs from Redux state
+    const myCommunityIds = useMemo(() => myCommunities.map((c) => c.id), [myCommunities]);
 
-    const fetchCommunities = async () => {
-        try {
-            const data = await communityService.getAllCommunities();
-            // Handle new response format with communities array
-            setCommunities(data.communities || data);
-            // Store my community IDs for checking membership
-            const myIds = (data.myCommunities || []).map((c) => c.id);
-            setMyCommunityIds(myIds);
-        } catch (error) {
-            toast.error('Failed to load communities');
-        } finally {
-            setLoading(false);
+    useEffect(() => {
+        dispatch(getAllCommunities());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
         }
-    };
+    }, [error]);
 
     const handleJoin = async (id) => {
         try {
-            await communityService.joinCommunity(id);
+            await dispatch(joinCommunity(id)).unwrap();
             toast.success('Joined community!');
-            fetchCommunities();
+            dispatch(getAllCommunities());
         } catch (error) {
-            toast.error('Failed to join community');
+            toast.error(error || 'Failed to join community');
         }
     };
 
     const handleLeave = async (id) => {
         try {
-            await communityService.leaveCommunity(id);
+            await dispatch(leaveCommunity(id)).unwrap();
             toast.success('Left community');
-            fetchCommunities();
+            dispatch(getAllCommunities());
         } catch (error) {
-            toast.error('Failed to leave community');
+            toast.error(error || 'Failed to leave community');
         }
     };
 
     const handleCreateCommunity = async (communityData) => {
         try {
-            await communityService.createCommunity(communityData);
+            await dispatch(createCommunity(communityData)).unwrap();
             toast.success('Community created!');
             setShowModal(false);
-            fetchCommunities();
-        } catch {
-            toast.error('Failed to create community');
+            dispatch(getAllCommunities());
+        } catch (error) {
+            toast.error(error || 'Failed to create community');
         }
     };
 
@@ -95,7 +89,7 @@ export default function Communities() {
                                         )}
                                         <div>
                                             <Link to={`/communities/${community.id}`} className="text-lg font-bold hover:text-blue-600">
-                                                r/{community.name}
+                                                c/{community.name}
                                             </Link>
                                             <p className="text-sm text-gray-500">{community.Members?.length || 0} members</p>
                                         </div>
